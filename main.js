@@ -58,8 +58,8 @@ function init()
 		ctx.strokeRect(width+10, 0, piece_size*5,piece_size*3);
 	}
 	id = 1;
-	var piece = random_piece(0,0, id);
-	next_piece = random_piece(0, 0, id);
+	var piece = random_piece(rand_between(0, 10),0, id);
+	next_piece = random_piece(rand_between(0, 10), 0, id);
 	draw_next_piece();
 	draw(piece);
 	cur_piece = piece;
@@ -99,7 +99,7 @@ function do_movement()
 	if(!down(cur_piece))
 	{
 		cur_piece = next_piece;
-		next_piece = random_piece(0,0,++id);
+		next_piece = random_piece(rand_between(0, 10),0,++id);
 		check_line_full();
 	}
 	grid_draw();
@@ -112,7 +112,7 @@ function drop()
 		grid_draw();
 	}
 	cur_piece = next_piece;
-	next_piece = random_piece(0,0,++id);
+	next_piece = random_piece(rand_between(0, 10),0,++id);
 	check_line_full();
 }
 function random_piece(x, y, id)
