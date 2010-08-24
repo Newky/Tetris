@@ -1,0 +1,17 @@
+A Simple Tetris Clone
+---------------------
+
+I Have Plans to make this embeddable, I.e you just include the div in your page and you can play tetris.
+
+But it is still buggy
+
+Things that need attention:
+
+1) sometimes dropping piece into a gap will bug out and delete pieces around it.
+2) while dropping down beside an ajacent piece and trying to slide a piece underneath
+can sometimes result in deleting the piece adjacent
+3) although Im happy with the rotation, it tends to move to an unnatural position
+
+------------------------
+
+Richy Delaney
