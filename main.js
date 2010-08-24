@@ -143,18 +143,32 @@ function re_draw_grid()
 
 function draw(piece)
 {
-		var last_line = piece.footprint[piece.footprint.length-1];
-		var next_line = grid[piece.y+piece.footprint.length-1];
-		var i = 0;
-		for(;i<last_line.length;i++)
-			if(last_line[i] != -1)
-				if(next_line[piece.x+i] != 0)
-					return 0;
-		i=0;
-		while(i < piece.footprint.length)
+	/*var last_line = piece.footprint[piece.footprint.length-1];*/
+	/*var next_line = grid[piece.y+piece.footprint.length-1];*/
+	/*var i = 0;*/
+	/*for(;i<last_line.length;i++)*/
+	/*if(last_line[i] != -1)*/
+	/*if(next_line[piece.x+i] != 0)*/
+	/*return 0;*/
+	/*i=0;*/
+		var i =0;
+		for(;i < piece.footprint.length;i++)
 		{
 			var j = 0;
-			while(j < piece.footprint[i].length)
+			for(;j < piece.footprint[i].length;j++)
+			{
+				if(piece.footprint[i][j] != -1)	
+				{
+					if(grid[piece.y+i][piece.x+j] != 0)
+					{
+						return 0;
+					}
+				}
+			}
+		}
+		for(i=0;i<piece.footprint.length;i++)
+		{
+			for(var j=0;j < piece.footprint[i].length;j++)
 			{
 				if(piece.footprint[i][j] != -1)
 				{
@@ -166,13 +180,10 @@ function draw(piece)
 					}
 					else
 					{
-						p_grid(grid);
 						return 0;
 					}
 				}
-				j++;
 			}
-			i++;
 		}
 		return 1;
 }
@@ -245,8 +256,13 @@ function left(piece)
 		dir(piece, 0);
 	else
 	{
+		clear(piece);
 		shift(piece, 0);
-		draw(piece);
+		if(!draw(piece))
+		{
+			shift(piece, 1);
+			draw(piece);
+		}
 	}
 }
 
@@ -256,8 +272,13 @@ function right(piece)
 		dir(piece, 1);
 	else
 	{
+		clear(piece);
 		shift(piece, 1);
-		draw(piece);
+		if(!draw(piece))
+		{
+			shift(piece, 0);
+			draw(piece);
+		}
 	}
 }
 
@@ -265,7 +286,6 @@ function shift(piece, dir)
 {
 	//Dir equal 0 left
 	//equal 1 right
-	clear(piece);
 	var temp = copy(piece)
 	if(dir == 0)
 	{
@@ -278,7 +298,7 @@ function shift(piece, dir)
 		}
 		var j =0;
 		for(;j<temp.length;j++)
-			piece.footprint[j][3] = temp[j][0];
+			piece.footprint[j][3] = -1;
 	}
 	else if(dir == 1)
 	{
@@ -291,7 +311,7 @@ function shift(piece, dir)
 		}
 		var j =0;
 		for(;j<temp.length;j++)
-			piece.footprint[j][0] = temp[j][3];
+			piece.footprint[j][0] = -1;
 	}
 	else
 	{
@@ -400,9 +420,9 @@ function dir(piece, dirc)
 	if(!draw(piece))
 	{
 		if(!dirc)
-			piece.x -= 1;
-		else
 			piece.x += 1;
+		else
+			piece.x -= 1;
 		draw(piece);
 	}
 }
