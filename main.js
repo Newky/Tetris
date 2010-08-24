@@ -18,6 +18,7 @@ var piece_size = 20;
 var ctx;
 //Current piece
 var cur_piece;
+var next_piece;
 //Number of pieces
 var id;
 //Score variable
@@ -54,9 +55,12 @@ function init()
 		ctx = canvas.getContext('2d'); 
 		//Draw Border
 		ctx.strokeRect(0,0,width,height);
+		ctx.strokeRect(width+10, 0, piece_size*5,piece_size*3);
 	}
 	id = 1;
 	var piece = random_piece(0,0, id);
+	next_piece = random_piece(0, 0, id);
+	draw_next_piece();
 	draw(piece);
 	cur_piece = piece;
 	setInterval("do_movement();", 1000);
@@ -68,11 +72,34 @@ function grid_draw()
 	ctx.strokeRect(0,0,width,height);
 }
 
+function draw_next_piece()
+{
+	ctx.fillStyle = ids[""+next_piece.id];
+	for(var i=0;i<next_piece.footprint.length;i++)
+	{
+		for(var j=0;j<next_piece.footprint[i].length;j++)
+		{
+			if(next_piece.footprint[i][j] != -1)
+			{
+				ctx.fillRect(width+10+(piece_size/2)+(piece_size*j),(piece_size/2) + (piece_size*i),piece_size, piece_size);
+			}	
+		}
+	}
+}
+
+function clear_next_piece()
+{
+	ctx.fillStyle = "rgb(255, 255, 255)";
+	ctx.fillRect(width+10, 0, piece_size*5, piece_size*3);
+	ctx.strokeRect(width+10, 0, piece_size*5,piece_size*3);
+}
+
 function do_movement()
 {
 	if(!down(cur_piece))
 	{
-		cur_piece = random_piece(0,0,++id);
+		cur_piece = next_piece;
+		next_piece = random_piece(0,0,++id);
 		check_line_full();
 	}
 	grid_draw();
@@ -84,7 +111,8 @@ function drop()
 	{
 		grid_draw();
 	}
-	cur_piece = random_piece(0,0,++id);
+	cur_piece = next_piece;
+	next_piece = random_piece(0,0,++id);
 	check_line_full();
 }
 function random_piece(x, y, id)
@@ -373,6 +401,8 @@ function check_down_blank(piece)
 
 function check_line_full()
 {
+	clear_next_piece();
+	draw_next_piece();
 	var i=0;
 	var needed = 0;
 	for(;i<grid.length;i++)
