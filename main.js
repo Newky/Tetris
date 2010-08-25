@@ -23,6 +23,9 @@ var next_piece;
 var id;
 //Score variable
 var score=0;
+//Timerdelay
+var timerdelay = 1000;
+var intervalHandle;
 document.onkeyup = key_pressed;
 
 //Initial Setup function, called on load
@@ -63,7 +66,7 @@ function init()
 	draw_next_piece();
 	draw(piece);
 	cur_piece = piece;
-	setInterval("do_movement();", 1000);
+	intervalHandle = setInterval("do_movement();", timerdelay);
 }
 
 function grid_draw()
@@ -564,6 +567,12 @@ function zig_zag_alt(startx, starty, id)
 function update_score()
 {
 	document.getElementById("score").innerHTML = "Score:"+score;
+	if(score % 25 == 0)
+	{
+		timerdelay -= 50;
+		clearInterval(intervalHandle);
+		intervalHandle = setInterval("do_movement();", timerdelay);
+	}
 }
 
 function key_pressed(e)
