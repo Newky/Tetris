@@ -121,6 +121,7 @@ function drop()
 function random_piece(x, y, id)
 {
 	var num = rand_between(0, 7);
+	
 	++score;update_score();
 	switch(num)
 	{
@@ -406,6 +407,19 @@ function check_line_full()
 {
 	clear_next_piece();
 	draw_next_piece();
+	if(id % 5 ==0)
+	{
+		var color = ids[id-1];
+		var divs = document.getElementsByTagName("div");
+		for(var i=0;i<divs.length;i++)
+		{
+			var item = divs[i];
+			if(item.className.indexOf("color") != -1)
+			{
+				item.style.backgroundColor = color;
+			}
+		}
+	}
 	var i=0;
 	var needed = 0;
 	for(;i<grid.length;i++)
