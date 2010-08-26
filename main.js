@@ -104,6 +104,11 @@ function do_movement()
 		cur_piece = next_piece;
 		next_piece = random_piece(rand_between(0, 10),0,++id);
 		check_line_full();
+		if(!down(cur_piece))
+		{
+			clearInterval(intervalHandle);
+			alert("game over");
+		}
 	}
 	grid_draw();
 }
@@ -241,20 +246,6 @@ function clear(piece)
 	
 }
 
-function p_grid(piece)
-{
-	var str = "";
-	i=0;
-	for(;i<piece.length;i++)
-	{
-		var j=0;
-		for(;j<piece[i].length;j++)
-			str += piece[i][j]+",";
-		str += "\n"
-	}
-	alert(str);
-}
-
 
 function down(piece)
 {
@@ -277,7 +268,10 @@ function down(piece)
 	{
 		clear(piece);
 		shift(piece, 2);
-		draw(piece);
+		if(!draw(piece))
+		{
+			game_over();
+		}
 		return 1;
 	}
 }
@@ -447,8 +441,19 @@ function check_line_full()
 	if(needed)
 	{
 		score += (needed*5);update_score();
-		re_draw_grid();
 	}
+}
+
+function check_over()
+{
+	var i =0;
+	for(;i<2;i++)
+	{
+		for(var j=0;j < grid[i].length;j++)
+			if(grid[i][j] != 0)
+				return 1;
+	}
+	return 0;
 }
 
 function dir(piece, dirc)
@@ -587,6 +592,15 @@ function update_score()
 		clearInterval(intervalHandle);
 		intervalHandle = setInterval("do_movement();", timerdelay);
 	}
+}
+
+function game_over()
+{
+	clearInterval(intervalHandle);
+	ctx.fillRect(0, 0, width, height);
+	ctx.strokeRect(0,0,width,height);
+	ctx.font = "bold 30px sans-serif"
+	ctx.strokeText("Game Over", width/4, height/2);
 }
 
 function key_pressed(e)
